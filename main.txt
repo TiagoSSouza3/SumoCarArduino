@@ -1,0 +1,138 @@
+#include <SoftwareSerial.h>
+SoftwareSerial bluetooth(0, 1);
+
+int IN1 = 9;
+int IN2 = 6;
+int IN3 = 7;
+int IN4 = 8;
+int RPM1 = 3;
+int RPM2 = 5;
+int velocidade = 0;
+char comando;
+
+void setup() {
+  bluetooth.begin(9600);
+  Serial.begin(9600);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(RPM1, OUTPUT);
+  pinMode(RPM2, OUTPUT);
+}
+
+void loop() {
+ 
+  while (bluetooth.available()) {
+    comando = bluetooth.read();
+   
+    if (comando == 'F') {           // FRENTE
+      setVelocidade();
+      digitalWrite(IN1, LOW);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW);                                                          
+
+    } else if (comando == 'B') {    // TRÁS
+      setVelocidade();
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN4, HIGH);
+     
+    } else if (comando == 'L') {    // ESQUERDA
+      setVelocidade();
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW);
+       
+    } else if (comando == 'R') {     // DIREITA
+      setVelocidade();
+      digitalWrite(IN1, LOW);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN4, HIGH);
+
+    } else if (comando == 'G') {     // DIAGONAL ESQUERDA FRENTE
+      setVelocidadeEsquerda();
+      digitalWrite(IN1, LOW);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW);
+
+    } else if (comando == 'I') {     // DIAGONAL DIREITA FRENTE
+      setVelocidadeDireita();
+      digitalWrite(IN1, LOW);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, LOW);
+     
+    } else if (comando == 'H') {     // DIAGONAL ESQUERDA TRÁS
+      setVelocidadeEsquerda();
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN4, HIGH);
+
+    } else if (comando == 'J') {     // DIAGONAL DIREITA TRÁS
+      setVelocidadeDireita();
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN4, HIGH);
+
+    } else {                         // PARADO
+      digitalWrite(IN1, HIGH);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN4, HIGH);
+    }
+   
+    if (comando == '1') {     // VELOCIDADE 10
+      velocidade = (1/10);
+     
+    } else if (comando == '2') {     // VELOCIDADE 20
+      velocidade = (2/10);
+
+    } else if (comando == '3') {     // VELOCIDADE 30
+      velocidade = (3/10);
+
+    } else if (comando == '4') {     // VELOCIDADE 40
+      velocidade = (4/10);
+
+    } else if (comando == '5') {     // VELOCIDADE 50
+      velocidade = (5/10);
+
+    } else if (comando == '6') {     // VELOCIDADE 60
+      velocidade = (6/10);
+
+    } else if (comando == '7') {     // VELOCIDADE 70
+      velocidade = (7/10);
+
+    } else if (comando == '8') {     // VELOCIDADE 80
+      velocidade = (8/10);
+
+    } else if (comando == '9') {     // VELOCIDADE 90
+      velocidade = (9/10);
+
+    } else if (comando == 'q') {     // VELOCIDADE 100
+      velocidade = 1;
+    }
+  }
+}
+
+void setVelocidade (){
+  analogWrite(RPM1, 255*velocidade);
+  analogWrite(RPM2, 255*velocidade);
+  }
+
+void setVelocidadeDireita (){
+  analogWrite(RPM1, 255*velocidade);
+  analogWrite(RPM2, 180*velocidade);
+}
+
+void setVelocidadeEsquerda (){
+  analogWrite(RPM1, 180*velocidade);
+  analogWrite(RPM2, 255*velocidade);
+}
